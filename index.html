@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BiteGames Landing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F8F8F8;
+      --text: #4d4d4d;
+      --muted: #bcbcbc;
+      --purple-soft: #e8cbed;
+      --purple-strong: #9733b7;
+      --green: #75eb26;
+      --green-dark: #52c516;
+      --green-soft: #d2f4bf;
+      --white: #ffffff;
+      --radius: 18px;
+      --shadow: 0 10px 24px rgba(0,0,0,.06);
+      --arrow-float: 2.2s ease-in-out infinite;
+      --button-pulse: 1.9s ease-in-out infinite;
+      --container: 760px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    img, svg { display: block; max-width: 100%; }
+    button { font: inherit; }
+
+    .page {
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      background: var(--bg);
+    }
+
+    .topbar {
+      background: var(--purple-soft);
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .menu-btn {
+      position: absolute;
+      left: 12px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .menu-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 12px;
+      width: min(280px, calc(100vw - 24px));
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 18px 34px rgba(0,0,0,.14);
+      padding: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s ease, transform .22s ease;
+      z-index: 30;
+    }
+
+    .menu-panel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .menu-link {
+      display: block;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: #4d4d4d;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .menu-link:hover {
+      background: #f3f3f3;
+    }
+
+    .menu-lines,
+    .menu-lines::before,
+    .menu-lines::after {
+      content: "";
+      display: block;
+      width: 28px;
+      height: 4px;
+      border-radius: 999px;
+      background: #4d4d4d;
+    }
+
+    .menu-lines::before { transform: translateY(-8px); }
+    .menu-lines::after { transform: translateY(4px); }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand img {
+      width: auto;
+      height: clamp(20px, 4vw, 28px);
+      object-fit: contain;
+    }
+
+    .hero {
+      padding: 18px 16px 28px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin: 8px 0 20px;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      line-height: 1.05;
+      font-weight: 800;
+      color: #4b4b4b;
+    }
+
+    .download-ring {
+      width: min(62vw, 245px);
+      aspect-ratio: 1;
+      border: 10px solid var(--green);
+      border-radius: 50%;
+      margin: 0 auto 22px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+    }
+
+    .download-icon {
+      animation: floatArrow var(--arrow-float);
+      filter: drop-shadow(0 10px 10px rgba(117, 235, 38, .18));
+      transform-origin: center;
+    }
+
+    @keyframes floatArrow {
+      0%, 100% { transform: translateY(-4px); }
+      50% { transform: translateY(10px); }
+    }
+
+    .steps {
+      width: fit-content;
+      margin: 0 auto 26px;
+      display: grid;
+      gap: 14px;
+      text-align: left;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 700;
+    }
+
+    .num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #5a5a5a;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      flex: 0 0 auto;
+    }
+
+    /* Sticky bottom CTA */
+    .fixed-cta-wrapper {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .fixed-cta-inner {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 10px 16px 14px;
+      display: flex;
+      justify-content: center;
+      pointer-events: auto;
+    }
+
+    .fixed-cta-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 999px;
+      background: var(--green);
+      color: #4d4d4d;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 14px 18px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .cta {
+      width: 100%;
+      border: 0;
+      border-radius: 20px;
+      background: var(--green);
+      color: #4d4d4d;
+      font-weight: 800;
+      font-size: clamp(1.7rem, 5vw, 2.25rem);
+      padding: 26px 20px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+      animation: pulseButton var(--button-pulse);
+    }
+
+    @keyframes pulseButton {
+      0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 10px 24px rgba(0,0,0,.06); }
+      50% { transform: translateY(-3px) scale(1.02); box-shadow: 0 16px 30px rgba(117, 235, 38, .28); }
+    }
+
+    .cta:hover { background: var(--green-dark); }
+    .cta:active { transform: scale(.985); animation: none; }
+
+    .smallprint {
+      margin: 14px auto 0;
+      font-size: clamp(.72rem, 1.7vw, .98rem);
+      line-height: 1.35;
+      color: #cfcfcf;
+      max-width: 680px;
+    }
+
+    .operators {
+      margin-top: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .operators img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .faq,
+    .reasons {
+      padding: 18px 16px 10px;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .faq-item {
+      background: #FAE2FF;
+      border-radius: 10px;
+      overflow: hidden;
+      border: none;
+      box-shadow: none;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 18px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      text-align: left;
+      font-size: clamp(1rem, 2.7vw, 1.35rem);
+      font-weight: 700;
+      color: #4a4a4a;
+      min-height: 62px;
+      background: transparent;
+      border: none;
+    }
+
+    .faq-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #5a5a5a;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.55rem;
+      line-height: 1;
+      flex: 0 0 auto;
+      transition: transform .2s ease, background .2s ease;
+      padding-bottom: 1px;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 18px;
+      color: #5e5e5e;
+      font-size: clamp(.95rem, 2.1vw, 1.08rem);
+      line-height: 1.45;
+      transition: max-height .28s ease, padding .28s ease;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 180px;
+      padding: 0 18px 18px;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(180deg);
+      background: #4b4b4b;
+    }
+
+    .section-title {
+      margin: 26px 0 18px;
+      text-align: center;
+      color: var(--purple-strong);
+      font-weight: 800;
+      font-size: clamp(1.25rem, 3.5vw, 2rem);
+      text-transform: uppercase;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding-bottom: 44px;
+    }
+
+    .card {
+      background: var(--green-soft);
+      border-radius: 8px;
+      padding: 18px 16px 20px;
+      min-height: 168px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: clamp(1.15rem, 3vw, 1.9rem);
+      line-height: 1.02;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .card p {
+      margin: 12px 0 0;
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      line-height: 1.15;
+    }
+
+    .icon {
+      width: 28px;
+      height: 28px;
+      color: #404040;
+      flex: 0 0 auto;
+    }
+
+    .icon-img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    /* Bloque teléfono */
+    .phone-box {
+      margin: 26px auto 0;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .phone-title {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      color: #5e5e5e;
+    }
+
+    .phone-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 10px;
+      border: 2px solid #d6d6d6; /* gris por defecto */
+      background: #ffffff;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      transition: border-color .18s ease;
+    }
+
+    .phone-input-wrap.valid {
+      border-color: #8ee63b; /* verde cuando es válido */
+    }
+
+    .phone-icon-svg {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 auto;
+      color: #4d4d4d;
+    }
+
+    .phone-prefix {
+      font-weight: 700;
+      color: #4d4d4d;
+      flex: 0 0 auto;
+    }
+
+    .phone-input {
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      flex: 1 1 auto;
+      padding: 4px 0;
+      letter-spacing: 0.08em;
+      color: #4d4d4d;
+      background: transparent;
+    }
+
+    .phone-input::placeholder {
+      color: #bfbfbf;
+    }
+
+    .phone-cta {
+      margin-top: 6px;
+      background: #d4d4d4;
+      color: #777777;
+      box-shadow: none;
+      cursor: not-allowed;
+      animation: none;
+    }
+
+    .phone-cta.enabled {
+      background: var(--green);
+      color: #4d4d4d;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .phone-cta.enabled:hover {
+      background: var(--green-dark);
+    }
+
+    /* Bloque PIN */
+    .pin-box {
+      margin: 22px auto 0;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .pin-title {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      color: #5e5e5e;
+    }
+
+    .pin-input-wrap {
+      border-radius: 10px;
+      border: 2px solid #d6d6d6;
+      background: #ffffff;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      transition: border-color .18s ease;
+    }
+
+    .pin-input-wrap.valid {
+      border-color: #8ee63b;
+    }
+
+    .pin-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 1.4rem;
+      letter-spacing: 0.5em;
+      text-align: center;
+      color: #4d4d4d;
+      background: transparent;
+    }
+
+    .pin-input::placeholder {
+      color: #bfbfbf;
+    }
+
+    .pin-cta {
+      margin-top: 6px;
+      background: #d4d4d4;
+      color: #777777;
+      box-shadow: none;
+      cursor: not-allowed;
+      animation: none;
+    }
+
+    .pin-cta.enabled {
+      background: var(--green);
+      color: #4d4d4d;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .pin-cta.enabled:hover {
+      background: var(--green-dark);
+    }
+
+    @media (max-width: 520px) {
+      .topbar { min-height: 50px; }
+      .brand { font-size: .92rem; }
+      .download-ring { border-width: 8px; width: min(54vw, 180px); }
+      .cta { border-radius: 16px; }
+      .operators { font-size: .9rem; }
+      .cards { gap: 12px; }
+      .card { min-height: 136px; }
+
+      .fixed-cta-inner {
+        padding-inline: 12px;
+      }
+
+      .faq-item { padding: 0; }
+      .faq-question { padding: 16px 14px; }
+    }
+
+    @media (min-width: 768px) {
+      .hero,
+      .faq,
+      .reasons { padding-left: 24px; padding-right: 24px; }
+      .faq-list { gap: 14px; }
+      .faq-item { border-radius: 12px; }
+      .cards { gap: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="site-menu">
+        <span class="menu-lines"></span>
+      </button>
+
+      <nav id="site-menu" class="menu-panel" aria-label="Menú principal">
+        <a class="menu-link" href="https://bg.acclog.in/al/dWQ0mIXj08ZzYWx0eQXX" target="_blank" rel="noopener noreferrer">Bitegames</a>
+        <a class="menu-link" href="https://bgames.store/info/terms" target="_blank" rel="noopener noreferrer">Regulamin</a>
+        <a class="menu-link" href="https://bgames.store/imprint" target="_blank" rel="noopener noreferrer">odcisk</a>
+      </nav>
+
+      <div class="brand" aria-label="Bite Games logo">
+        <img src="./assets/logobite.png" alt="Bite Games" width="120" height="27" />
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Pobierz teraz</h1>
+
+        <div class="download-ring" aria-hidden="true">
+          <svg class="download-icon" viewBox="0 0 180 180" width="136" height="136" role="img" aria-label="Download icon">
+            <path d="M56 18h68v58h36L90 152 20 76h36V18Z" fill="#75eb26"></path>
+          </svg>
+        </div>
+
+        <div class="steps" aria-label="Pasos para descargar">
+          <div class="step"><span class="num">1</span><span>Kliknij Dalej</span></div>
+          <div class="step"><span class="num">2</span><span>Wpisz swój PIN</span></div>
+          <div class="step"><span class="num">3</span><span>Pobierz</span></div>
+        </div>
+
+        <!-- Paso 1: CTA inicial -->
+        <button class="cta" id="heroCta">DALEJ</button>
+
+        <!-- Paso 2: Teléfono -->
+        <div class="phone-box" id="phoneBox" hidden>
+          <p class="phone-title">
+            Wprowadź numer swojego telefonu komórkowego, aby otrzymać kod PIN
+          </p>
+
+          <div class="phone-input-wrap" id="phoneWrap">
+            <svg class="phone-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="7" y="3" width="10" height="18" rx="2" ry="2" fill="none" stroke="#4d4d4d" stroke-width="1.6"></rect>
+              <circle cx="12" cy="17" r="1.2" fill="#4d4d4d"></circle>
+            </svg>
+            <span class="phone-prefix">+48</span>
+            <input
+              id="msisdn"
+              class="phone-input"
+              type="tel"
+              inputmode="numeric"
+              autocomplete="tel"
+              placeholder="__________"
+              aria-label="Numer telefonu komórkowego"
+            />
+          </div>
+
+          <button class="cta phone-cta" id="phoneCta" disabled>DALEJ</button>
+        </div>
+
+        <!-- Paso 3: PIN -->
+        <div class="pin-box" id="pinBox" hidden>
+          <p class="pin-title">
+            Proszę wpisać PIN, który Ci wysłaliśmy
+          </p>
+
+          <div class="pin-input-wrap" id="pinWrap">
+            <input
+              id="pinInput"
+              class="pin-input"
+              type="tel"
+              inputmode="numeric"
+              maxlength="4"
+              placeholder="••••"
+              aria-label="Kod PIN"
+            />
+          </div>
+
+          <button class="cta pin-cta" id="pinCta" disabled>DALEJ</button>
+        </div>
+
+        <p class="smallprint">BiteGames za 18,01 zł z VAT Opłata będzie pobierana co 7 dni</p>
+        <p class="smallprint">Playwing LTD. Aktywuj dostęp do: Buke za 18,01 zł z VAT. Opłata będzie pobierana co 7 dni. Usługę możesz dezaktywować wysyłając bezpł. STOP Buke na 80708 (Orange) lub 80425 (T-Mobile / Plus) lub 191 (Play). Opłata zostanie doliczona do Twojego rachunku u twojego operatora telefonii na abonament lub odliczona od środków na koncie (telefon na kartę). Wprowadź swój numer telefonu. Przygotuj telefon, za chwilę otrzymasz wiadomość z kodem PIN, którym zatwierdzisz zamówienie. Wypełnienie tego formularza oznacza akceptację Regulaminu Usługi.</p>
+      </section>
+
+      <section class="operators" aria-label="Operadores móviles">
+        <img src="./assets/pl_combined logos correct (1) 1.png" alt="Orange, Play, T-Mobile y Plus" width="388" height="30" loading="lazy" />
+      </section>
+
+      <section class="faq">
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Czym jest BiteGames?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">BiteGames to usługa subskrypcyjna z dostępem do katalogu gier mobilnych, z którego możesz korzystać na kompatybilnych urządzeniach.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Ile kosztuje BiteGames?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Koszt subskrypcji BiteGames wynosi 18,01 zł z VAT, a opłata pobierana jest co 7 dni zgodnie z informacją na stronie.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Czy BiteGames działa na urządzeniach mobilnych?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Tak, usługa została przygotowana z myślą o urządzeniach mobilnych i jest dostosowana do telefonów oraz kompatybilnych przeglądarek mobilnych.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Jak anulować subskrypcję?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Subskrypcję możesz anulować, wysyłając wiadomość STOP zgodnie z instrukcjami operatora pokazanymi w tekście informacyjnym na stronie.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="reasons">
+        <h2 class="section-title">WIĘCEJ POWODÓW, ABY DOŁĄCZYĆ</h2>
+
+        <div class="cards">
+          <article class="card">
+            <div class="card-head">
+              <h3>PONAD<br>130 GIER</h3>
+              <img class="icon-img" src="./assets/game.png" alt="Ikona gier">
+            </div>
+            <p>Łatwe do grania, wiele typów gier</p>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3>DODANO<br>NOWE GRY</h3>
+              <img class="icon-img" src="./assets/star.png" alt="Ikona gwiazdki">
+            </div>
+            <p>Gry są aktualizowane co tydzień</p>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3>NAJLEPSZE<br>LICENCJE</h3>
+              <img class="icon-img" src="./assets/medal-star.png" alt="Ikona medalu">
+            </div>
+            <p>Mamy najlepsze licencje</p>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3>WIELE<br>KATEGORII</h3>
+              <img class="icon-img" src="./assets/24-support.png" alt="Ikona 24/7">
+            </div>
+            <p>Gry dla każdego!</p>
+          </article>
+        </div>
+      </section>
+
+      <div class="fixed-cta-wrapper">
+        <div class="fixed-cta-inner">
+          <button class="fixed-cta-btn">Subskrybuj teraz</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const menuButton = document.querySelector('.menu-btn');
+    const menuPanel = document.querySelector('.menu-panel');
+
+    const heroCta = document.getElementById('heroCta');
+    const phoneBox = document.getElementById('phoneBox');
+    const msisdnInput = document.getElementById('msisdn');
+    const phoneCta = document.getElementById('phoneCta');
+    const phoneWrap = document.getElementById('phoneWrap');
+
+    const pinBox = document.getElementById('pinBox');
+    const pinInput = document.getElementById('pinInput');
+    const pinCta = document.getElementById('pinCta');
+    const pinWrap = document.getElementById('pinWrap');
+
+    const bitegamesUrl = 'https://bg.acclog.in/al/dWQ0mIXj08ZzYWx0eQXX';
+
+    // Menú
+    menuButton.addEventListener('click', () => {
+      const isOpen = menuPanel.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!menuPanel.contains(event.target) && !menuButton.contains(event.target)) {
+        menuPanel.classList.remove('open');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Paso 1: mostrar teléfono
+    heroCta.addEventListener('click', () => {
+      heroCta.style.display = 'none';
+      phoneBox.hidden = false;
+      msisdnInput.focus();
+    });
+
+    // Validación teléfono: solo dígitos, borde verde y botón activo
+    msisdnInput.addEventListener('input', () => {
+      const digits = msisdnInput.value.replace(/\D/g, '');
+      msisdnInput.value = digits;
+
+      const isValid = digits.length >= 9;
+
+      phoneCta.disabled = !isValid;
+      phoneCta.classList.toggle('enabled', isValid);
+      phoneWrap.classList.toggle('valid', isValid);
+    });
+
+    // Paso 2: al darle DALEJ verde, mostramos PIN
+    phoneCta.addEventListener('click', () => {
+      if (phoneCta.disabled) return;
+
+      phoneBox.hidden = true;
+      pinBox.hidden = false;
+      pinInput.focus();
+    });
+
+    // Validación PIN: 4 dígitos
+    pinInput.addEventListener('input', () => {
+      const digits = pinInput.value.replace(/\D/g, '');
+      pinInput.value = digits;
+
+      const isValid = digits.length === 4;
+
+      pinCta.disabled = !isValid;
+      pinCta.classList.toggle('enabled', isValid);
+      pinWrap.classList.toggle('valid', isValid);
+    });
+
+    // Paso 3: DALEJ del PIN => redirección a BiteGames
+    pinCta.addEventListener('click', () => {
+      if (pinCta.disabled) return;
+      window.location.href = bitegamesUrl;
+    });
+
+    // FAQ acordeón
+    document.querySelectorAll('.faq-question').forEach((button) => {
+      button.addEventListener('click', () => {
+        const item = button.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+
+        document.querySelectorAll('.faq-item').forEach((faq) => {
+          faq.classList.remove('open');
+          faq.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          faq.querySelector('.faq-icon').textContent = '+';
+        });
+
+        if (!isOpen) {
+          item.classList.add('open');
+          button.setAttribute('aria-expanded', 'true');
+          button.querySelector('.faq-icon').textContent = '−';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
